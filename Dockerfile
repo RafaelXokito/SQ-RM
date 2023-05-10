@@ -1,24 +1,44 @@
-# This Docker file is for building this project on Codeship Pro
-# https://documentation.codeship.com/pro/languages-frameworks/nodejs/
+FROM marketplace.gcr.io/google/c2d-debian11
 
-# use Cypress provided image with all dependencies included
-FROM cypress/base:18.14.1
-RUN node --version
-RUN npm --version
-WORKDIR /home/node/app
-# copy our test application
-COPY package.json package-lock.json ./
-COPY app ./app
-COPY serve.json ./
-# copy Cypress tests
-COPY cypress.config.js cypress ./
-COPY cypress ./cypress
+ENV NGINX_VERSION 1.22.0*
+ENV C2D_RELEASE 1.22.0
 
-# avoid many lines of progress bars during install
-# https://github.com/cypress-io/cypress/issues/1243
-ENV CI=1
+ENV ENABLE_STUB_STATUS false
 
-# install NPM dependencies and Cypress binary
-RUN npm ci
-# check if the binary was installed successfully
-RUN $(npm bin)/cypress verify
+RUN set -x \
+        && apt-get update \
+        && apt-get install -y \
+                dirmngr \
+                gnupg \
+                wget \
+                libtasn1-6 \
+        && rm -rf /var/lib/apt/lists/*
+
+RUN set -x \
+        && echo "deb http://nginx.org/packages/debian/ bullseye nginx" >> /etc/apt/sources.list \
+        && wget http://nginx.org/packages/keys/nginx_signing.key \
+        && apt-key add nginx_signing.key \
+        && apt-get update \
+        && apt-get install --no-install-recommends --no-install-suggests -y \
+                                                ca-certificates \
+                                                nginx=${NGINX_VERSION} \
+                                                nginx-module-xslt=${NGINX_VERSION} \
+                                                nginx-module-geoip=${NGINX_VERSION} \
+                                                nginx-module-image-filter=${NGINX_VERSION} \
+                                                nginx-module-perl=${NGINX_VERSION} \
+                                                nginx-module-njs=${NGINX_VERSION} \
+                                                gettext-base \
+        && rm -rf /var/lib/apt/lists/*
+
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+        && ln -sf /dev/stderr /var/log/nginx/error.log
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY stub.conf /etc/nginx/stub.conf.template
+
+RUN chmod +rx /usr/local/bin/docker-entrypoint.sh
+
+EXPOSE 80 443 8080
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
