@@ -28,7 +28,7 @@ pipeline {
                                     execCommand: '''
                                     cd /usr/share/nginx/html
                                     npm ci
-                                    pm2 restart todoApp -- start''',
+                                    pm2 restart todoApp''',
                                     execTimeout: 1200000,
                                     flatten: false,
                                     makeEmptyDirs: false,
@@ -79,7 +79,7 @@ pipeline {
 
         stage('Release to production') {
             steps {
-            // similar procedure as in the 'Build/ Deploy to staging' stage, suppressed here for cost saving purposes
+                // similar procedure as in the 'Build/ Deploy to staging' stage, suppressed here for cost saving purposes
                 echo "Deploying app in production environment"
            }
         }
