@@ -52,7 +52,7 @@ pipeline {
                 sh 'npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator'
                 sh 'npm run e2e:staging1spec'
             }
-            steps {
+            post {
                 success {
                     publishHTML (
                         target : [
