@@ -73,7 +73,7 @@ pipeline {
             script {
                       scannerHome = tool 'sonar-scanner';
                  }
-            withSonarQubeEnv('SonarCloud') { // Replace this name by the one you setup in the SonarQube Jenkins configuration (step 2)
+            withSonarQubeEnv('KITCHENSINK_2220659') { // Replace this name by the one you setup in the SonarQube Jenkins configuration (step 2)
             sh "${scannerHome}/bin/sonar-scanner"
             }
           }
