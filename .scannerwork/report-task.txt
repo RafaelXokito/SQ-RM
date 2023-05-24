@@ -1,0 +1,6 @@
+projectKey=KITCHENSINK_2220659
+serverUrl=https://sonar.creis.pt
+serverVersion=8.3.1.34397
+dashboardUrl=https://sonar.creis.pt/dashboard?id=KITCHENSINK_2220659
+ceTaskId=AYhOpM9jycD9pccTjLWq
+ceTaskUrl=https://sonar.creis.pt/api/ce/task?id=AYhOpM9jycD9pccTjLWq

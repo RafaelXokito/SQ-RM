@@ -1,0 +1,1 @@
+ 2jsXdhr0cypress/e2e/2-advanced-examples/connectors.cy.js

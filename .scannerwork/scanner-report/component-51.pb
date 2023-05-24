@@ -1,0 +1,1 @@
+3 2cssXhrapp/assets/css/vendor/fira.css
