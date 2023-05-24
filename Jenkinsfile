@@ -111,6 +111,14 @@ pipeline {
                     // Publish JMeter report using Performance plugin
                     perfReport filterRegex:'', sourceDataFiles: 'result.jtl'
                 }
+                failure {
+                    script {
+                        def errorCount = sh(script: "grep -o '<failure>true</failure>' result.jtl | wc -l", returnStdout: true).trim()
+                        if (Integer.parseInt(errorCount) > 10) {
+                            error("Performance Test failed with more than 10 errors")
+                        }
+                    }
+                }
             }
         }
 
