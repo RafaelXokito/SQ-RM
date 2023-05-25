@@ -109,15 +109,11 @@ pipeline {
                 }
                 success {
                     // Publish JMeter report using Performance plugin
-                    perfReport filterRegex:'', sourceDataFiles: 'result.jtl'
-                }
-                failure {
-                    script {
-                        def errorCount = sh(script: '''awk -F ',' '\$8=="false"' result.jtl | wc -l''', returnStdout: true).trim()
-                        if (Integer.parseInt(errorCount) > 10) {
-                            error("Performance Test failed with more than 10 errors")
-                        }
-                    }
+                    perfReport filterRegex:'', 
+                            sourceDataFiles: 'result.jtl', 
+                            errorFailedThreshold: 10,
+                            averageResponseTimeFailedThreshold: 500, // Fail if average response time is over 500ms
+                            percentileFailedThreshold: 1000  // Fail if 90th percentile response time is over 1000ms
                 }
             }
         }
