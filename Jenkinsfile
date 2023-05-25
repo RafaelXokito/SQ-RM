@@ -112,8 +112,10 @@ pipeline {
                     perfReport filterRegex:'', 
                             sourceDataFiles: 'result.jtl', 
                             errorFailedThreshold: 10,
-                            averageResponseTimeFailedThreshold: 500, // Fail if average response time is over 500ms
-                            percentileFailedThreshold: 1000  // Fail if 90th percentile response time is over 1000ms
+                            relativeFailedThresholdNegative: 1.2, // Fail if performance degrades by 20%
+                            relativeFailedThresholdPositive: 1.89, // Fail if performance improves by 89%
+                            relativeUnstableThresholdNegative: 1.8, // Mark as unstable if performance degrades by 80%
+                            relativeUnstableThresholdPositive: 1.5  // Mark as unstable if performance improves by 50%
                 }
             }
         }
